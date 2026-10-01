@@ -17,5 +17,5 @@ curl -fsSL https://github.com/dalex160/Viji/archive/refs/heads/main.tar.gz | tar
 echo "Building…"
 zsh "$tmp/Viji-main/build.sh"
 echo
-echo "Done. Viji is in ~/Applications and in your menu bar (chevron icon)."
-echo "Grant it Accessibility access when macOS asks, then Cmd-drag the chevron next to the battery icon."
+echo "Done. Viji is in ~/Applications and in your menu bar (eye icon)."
+echo "Grant it Accessibility access when macOS asks, then Cmd-drag the eye next to the battery icon."

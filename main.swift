@@ -241,6 +241,58 @@ final class OrderWindowController: NSObject, NSTableViewDataSource, NSTableViewD
     func windowWillClose(_ notification: Notification) { onClose?() }
 }
 
+func templateImage(_ draw: @escaping () -> Void) -> NSImage {
+    let image = NSImage(size: NSSize(width: 20, height: 18), flipped: false) { _ in
+        NSColor.black.set()
+        draw()
+        return true
+    }
+    image.isTemplate = true
+    image.accessibilityDescription = "Viji"
+    return image
+}
+
+let openEyeImage = templateImage {
+    let eye = NSBezierPath()
+    eye.move(to: NSPoint(x: 1.5, y: 9))
+    eye.curve(to: NSPoint(x: 18.5, y: 9), controlPoint1: NSPoint(x: 6, y: 15.5), controlPoint2: NSPoint(x: 14, y: 15.5))
+    eye.curve(to: NSPoint(x: 1.5, y: 9), controlPoint1: NSPoint(x: 14, y: 2.5), controlPoint2: NSPoint(x: 6, y: 2.5))
+    eye.close()
+    eye.lineWidth = 1.6
+    eye.lineJoinStyle = .round
+    eye.stroke()
+    let iris = NSBezierPath(ovalIn: NSRect(x: 6.6, y: 5.6, width: 6.8, height: 6.8))
+    iris.lineWidth = 1.6
+    iris.stroke()
+    NSBezierPath(ovalIn: NSRect(x: 8.4, y: 7.4, width: 3.2, height: 3.2)).fill()
+}
+
+let closedEyeImage = templateImage {
+    let p0 = NSPoint(x: 2, y: 12.5), p1 = NSPoint(x: 6.5, y: 6.5), p2 = NSPoint(x: 13.5, y: 6.5), p3 = NSPoint(x: 18, y: 12.5)
+    let lid = NSBezierPath()
+    lid.move(to: p0)
+    lid.curve(to: p3, controlPoint1: p1, controlPoint2: p2)
+    lid.lineWidth = 1.6
+    lid.lineCapStyle = .round
+    lid.stroke()
+    // Lashes point outward along the lid's normal.
+    for t in [0.18, 0.34, 0.5, 0.66, 0.82] as [CGFloat] {
+        let u = 1 - t
+        let x = u*u*u*p0.x + 3*u*u*t*p1.x + 3*u*t*t*p2.x + t*t*t*p3.x
+        let y = u*u*u*p0.y + 3*u*u*t*p1.y + 3*u*t*t*p2.y + t*t*t*p3.y
+        let dx = 3*u*u*(p1.x-p0.x) + 6*u*t*(p2.x-p1.x) + 3*t*t*(p3.x-p2.x)
+        let dy = 3*u*u*(p1.y-p0.y) + 6*u*t*(p2.y-p1.y) + 3*t*t*(p3.y-p2.y)
+        let len = (dx*dx + dy*dy).squareRoot()
+        let nx = dy / len, ny = -dx / len
+        let lash = NSBezierPath()
+        lash.move(to: NSPoint(x: x, y: y))
+        lash.line(to: NSPoint(x: x + nx * 2.6, y: y + ny * 2.6))
+        lash.lineWidth = 1.4
+        lash.lineCapStyle = .round
+        lash.stroke()
+    }
+}
+
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     var statusItem: NSStatusItem!
     var extras: [ExtraItem] = []
@@ -251,7 +303,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         statusItem.autosaveName = "Viji"
-        setChevron(open: false)
+        setEye(open: false)
         let menu = NSMenu()
         menu.delegate = self
         statusItem.menu = menu
@@ -296,14 +348,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
     }
 
-    func setChevron(open: Bool) {
-        statusItem.button?.image = NSImage(systemSymbolName: open ? "chevron.up" : "chevron.down",
-                                           accessibilityDescription: "Viji")
+    func setEye(open: Bool) {
+        statusItem.button?.image = open ? openEyeImage : closedEyeImage
     }
 
-    func menuWillOpen(_ menu: NSMenu) { setChevron(open: true) }
+    func menuWillOpen(_ menu: NSMenu) { setEye(open: true) }
 
-    func menuDidClose(_ menu: NSMenu) { setChevron(open: false) }
+    func menuDidClose(_ menu: NSMenu) { setEye(open: false) }
 
     func menuNeedsUpdate(_ menu: NSMenu) {
         menu.removeAllItems()

@@ -1,12 +1,18 @@
-# Viji
+<p align="center">
+  <img src="docs/logo.png" width="160" alt="Viji logo">
+</p>
 
-**See every menu bar icon — even the ones hidden behind the notch.**
+<h1 align="center">Viji</h1>
 
-[![Latest release](https://img.shields.io/github/v/release/dalex160/Viji)](https://github.com/dalex160/Viji/releases/latest)
-![macOS 13+](https://img.shields.io/badge/macOS-13%2B-blue)
-[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+<p align="center"><b>See every menu bar icon — even the ones hidden behind the notch.</b></p>
 
-On MacBooks with a camera notch, menu bar icons that don't fit simply disappear behind it. Viji adds a single chevron to your menu bar. Click it to get a list of **every** menu bar icon, and click any entry to open that icon's menu as if you had clicked it directly.
+<p align="center">
+  <a href="https://github.com/dalex160/Viji/releases/latest"><img src="https://img.shields.io/github/v/release/dalex160/Viji" alt="Latest release"></a>
+  <img src="https://img.shields.io/badge/macOS-13%2B-blue" alt="macOS 13+">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="License: MIT"></a>
+</p>
+
+On MacBooks with a camera notch, menu bar icons that don't fit simply disappear behind it. Viji adds a single eye to your menu bar. Click it and the eye opens onto a list of **every** menu bar icon; click any entry to open that icon's menu as if you had clicked it directly.
 
 *Viji* is the phonetic spelling of *vigie*, French for the lookout at the top of the mast who sees beyond the horizon.
 
@@ -51,7 +57,7 @@ cd Viji
 ## First launch
 
 1. **Grant Accessibility access** when macOS asks (System Settings → Privacy & Security → Accessibility). Viji needs it to read and click other apps' menu bar icons.
-2. **Move the chevron**: macOS places new icons on the left, which is exactly where the notch hides them. Hold ⌘ and drag the chevron next to the battery or Wi-Fi icon; its position is remembered.
+2. **Move the eye**: macOS places new icons on the left, which is exactly where the notch hides them. Hold ⌘ and drag the eye next to the battery or Wi-Fi icon; its position is remembered.
 
 > Every rebuild changes the app's ad-hoc signature, so macOS asks for Accessibility access again after an update. `build.sh` resets the old permission entry for you.
 
@@ -59,7 +65,7 @@ cd Viji
 
 | Action | How |
 | --- | --- |
-| See all icons | Click the chevron |
+| See all icons | Click the eye |
 | Open an icon's menu | Click its entry in the list |
 | Reorder or hide entries | **Edit order…** (⌘,), then drag rows or uncheck **Show** |
 | Restore menu bar order | **Sync with menu bar** in the order window |

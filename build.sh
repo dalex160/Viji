@@ -16,7 +16,8 @@ BIN="$APP/Contents/MacOS/Viji"
 
 [[ "$INSTALL" == 1 ]] && { pkill -x Viji 2>/dev/null || true; }
 rm -rf "$APP"
-mkdir -p "$APP/Contents/MacOS"
+mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
+cp Resources/AppIcon.icns "$APP/Contents/Resources/"
 
 if [[ "${UNIVERSAL:-0}" == 1 ]]; then
     tmp=$(mktemp -d)
@@ -37,6 +38,7 @@ cat > "$APP/Contents/Info.plist" <<EOF
     <key>CFBundleIdentifier</key><string>com.alexisdahan.Viji</string>
     <key>CFBundleName</key><string>Viji</string>
     <key>CFBundleExecutable</key><string>Viji</string>
+    <key>CFBundleIconFile</key><string>AppIcon</string>
     <key>CFBundlePackageType</key><string>APPL</string>
     <key>CFBundleShortVersionString</key><string>$VERSION</string>
     <key>CFBundleVersion</key><string>$VERSION</string>
