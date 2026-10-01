@@ -14,6 +14,11 @@ else
 fi
 BIN="$APP/Contents/MacOS/Viji"
 
+PREVIOUS_SIGNER="-"
+if [[ -d "$APP" ]] && codesign -dvv "$APP" 2>&1 | grep -q "Authority=Viji Local Signing"; then
+    PREVIOUS_SIGNER="Viji Local Signing"
+fi
+
 [[ "$INSTALL" == 1 ]] && { pkill -x Viji 2>/dev/null || true; }
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
@@ -48,11 +53,19 @@ cat > "$APP/Contents/Info.plist" <<EOF
 </plist>
 EOF
 
-codesign --force --sign - "$APP"
+IDENTITY="-"
+if [[ "$INSTALL" == 1 ]]; then
+    zsh scripts/setup-signing.sh || echo "Could not create a signing certificate; using an ad-hoc signature."
+    security find-certificate -c "Viji Local Signing" >/dev/null 2>&1 && IDENTITY="Viji Local Signing"
+fi
+codesign --force --sign "$IDENTITY" "$APP"
 
 if [[ "$INSTALL" == 1 ]]; then
-    # Ad-hoc signature changes on every build, so the old Accessibility grant no longer matches.
-    tccutil reset Accessibility com.alexisdahan.Viji >/dev/null 2>&1 || true
+    # An ad-hoc signature changes on every build, so a previous Accessibility grant can't match.
+    # The local certificate keeps the grant valid, unless the previous install was ad-hoc.
+    if [[ "$IDENTITY" == "-" || "$PREVIOUS_SIGNER" != "$IDENTITY" ]]; then
+        tccutil reset Accessibility com.alexisdahan.Viji >/dev/null 2>&1 || true
+    fi
     open "$APP"
     echo "Installed and launched $APP"
 else

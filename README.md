@@ -59,7 +59,11 @@ cd Viji
 1. **Grant Accessibility access** when macOS asks (System Settings → Privacy & Security → Accessibility). Viji needs it to read and click other apps' menu bar icons.
 2. **Move the eye**: macOS places new icons on the left, which is exactly where the notch hides them. Hold ⌘ and drag the eye next to the battery or Wi-Fi icon; its position is remembered.
 
-> Every rebuild changes the app's ad-hoc signature, so macOS asks for Accessibility access again after an update. `build.sh` resets the old permission entry for you.
+### Keeping the permission across updates
+
+macOS ties the Accessibility permission to the app's code signature. When you install with the one-liner or `build.sh`, Viji creates a self-signed **Viji Local Signing** certificate in your login keychain (once) and signs the app with it, so the permission survives rebuilds and updates. If macOS asks whether `codesign` may use that certificate, choose **Always Allow**.
+
+The prebuilt release is ad-hoc signed, so macOS asks for Accessibility access again after each update. To remove the certificate, delete **Viji Local Signing** in Keychain Access.
 
 ## Usage
 
