@@ -15,8 +15,11 @@ fi
 BIN="$APP/Contents/MacOS/Viji"
 
 PREVIOUS_SIGNER="-"
-if [[ -d "$APP" ]] && codesign -dvv "$APP" 2>&1 | grep -q "Authority=Viji Local Signing"; then
-    PREVIOUS_SIGNER="Viji Local Signing"
+if [[ -d "$APP" ]]; then
+    signature=$(codesign -dvv "$APP" 2>&1 || true)
+    if [[ "$signature" == *"Authority=Viji Local Signing"* ]]; then
+        PREVIOUS_SIGNER="Viji Local Signing"
+    fi
 fi
 
 [[ "$INSTALL" == 1 ]] && { pkill -x Viji 2>/dev/null || true; }
@@ -56,7 +59,9 @@ EOF
 IDENTITY="-"
 if [[ "$INSTALL" == 1 ]]; then
     zsh scripts/setup-signing.sh || echo "Could not create a signing certificate; using an ad-hoc signature."
-    security find-certificate -c "Viji Local Signing" >/dev/null 2>&1 && IDENTITY="Viji Local Signing"
+    if security find-certificate -c "Viji Local Signing" >/dev/null 2>&1; then
+        IDENTITY="Viji Local Signing"
+    fi
 fi
 codesign --force --sign "$IDENTITY" "$APP"
 
