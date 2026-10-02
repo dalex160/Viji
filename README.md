@@ -26,7 +26,15 @@ On MacBooks with a camera notch, menu bar icons that don't fit simply disappear 
 
 ## Install
 
-### One-line install (recommended)
+### Homebrew (recommended)
+
+```sh
+brew install --cask dalex160/tap/viji
+```
+
+Upgrade with `brew upgrade --cask viji`. Viji is not notarized, so the cask removes the quarantine attribute after installing; see [`Casks/viji.rb`](https://github.com/dalex160/homebrew-tap/blob/main/Casks/viji.rb).
+
+### One-line install
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/dalex160/Viji/main/install.sh | zsh
@@ -63,7 +71,7 @@ cd Viji
 
 macOS ties the Accessibility permission to the app's code signature. When you install with the one-liner or `build.sh`, Viji creates a self-signed **Viji Local Signing** certificate in your login keychain (once) and signs the app with it, so the permission survives rebuilds and updates. If macOS asks whether `codesign` may use that certificate, choose **Always Allow**.
 
-The prebuilt release is ad-hoc signed, so macOS asks for Accessibility access again after each update. To remove the certificate, delete **Viji Local Signing** in Keychain Access.
+Releases (Homebrew and the prebuilt app) are signed with a stable **Viji Release Signing** certificate, so the permission also survives updates. Switching between a release and a local build counts as a different app, so macOS asks once more. To remove the local certificate, delete **Viji Local Signing** in Keychain Access.
 
 ## Usage
 

@@ -2,6 +2,7 @@
 # Builds Viji.app. By default installs it to ~/Applications and launches it.
 #   UNIVERSAL=1   build for both Apple silicon and Intel
 #   INSTALL=0     only build (into ./build), don't install or launch
+#   SIGN_IDENTITY sign with this certificate instead of the local one (used by releases)
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -56,8 +57,8 @@ cat > "$APP/Contents/Info.plist" <<EOF
 </plist>
 EOF
 
-IDENTITY="-"
-if [[ "$INSTALL" == 1 ]]; then
+IDENTITY="${SIGN_IDENTITY:--}"
+if [[ "$INSTALL" == 1 && -z "${SIGN_IDENTITY:-}" ]]; then
     zsh scripts/setup-signing.sh || echo "Could not create a signing certificate; using an ad-hoc signature."
     if security find-certificate -c "Viji Local Signing" >/dev/null 2>&1; then
         IDENTITY="Viji Local Signing"
